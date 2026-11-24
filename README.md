@@ -100,9 +100,10 @@ Agent Workbench 的思路是把整套开发闭环搬进桌面：
 
 ## 快速开始
 
-1. 双击便携版 `AgentWorkbench-3.5.0-portable.exe`（未签名，SmartScreen 提示时选择"仍要运行"）。
-2. 标题栏文件夹按钮选择工作区；设置 → 模型 API 添加 OpenAI 兼容端点（OpenAI / DeepSeek / 通义 / 智谱 / Kimi / Ollama 预设，或手填 Base URL / Key / 模型）。
-3. 未填 Key 时自动进入演示模式：流式回复、扫描工作区、演示生图（本地 SVG），可先验证功能。
+从 [Releases](https://github.com/1323107439/agent-workbench/releases/tag/v3.5.0) 下载 `AgentWorkbench-3.5.0-portable.exe`（74.3MB），双击即可运行，无需安装（未签名，SmartScreen 提示时选择"仍要运行"）。
+
+1. 标题栏文件夹按钮选择工作区；设置 → 模型 API 添加 OpenAI 兼容端点（OpenAI / DeepSeek / 通义 / 智谱 / Kimi / Ollama 预设，或手填 Base URL / Key / 模型）。
+2. 未填 Key 时自动进入演示模式：流式回复、扫描工作区、演示生图（本地 SVG），可先验证功能。
 
 运行数据位于 `%APPDATA%\Agent Workbench\data`，默认工作区为 `文档\Agent Workbench Workspace`。
 
