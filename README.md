@@ -3,7 +3,7 @@
 > 一个把「对话、工具调用、智能体团队、网页 / 游戏创作引擎、技能、MCP 与插件市场」收进同一个桌面窗口的 AI 开发工作台。
 > 数据、模型密钥与项目文件全部留在本机，便携版解压即用。
 
-当前版本 **v3.6.0**，基于 Electron 33，主进程内嵌零依赖本地服务，界面为原生 HTML/CSS/JS，无前端构建链。
+当前版本 **v3.7.0**，基于 Electron 33，主进程内嵌零依赖本地服务，界面为原生 HTML/CSS/JS，无前端构建链。
 
 ![对话与工具时间线](screenshots/01-chat.png)
 
@@ -24,7 +24,7 @@ Agent Workbench 的思路是把整套开发闭环搬进桌面：
 
 | 模块 | 能力 |
 |---|---|
-| 对话 | SSE 流式输出；可折叠思考过程（可在设置关闭，并标注本轮修改的文件）；工具调用时间线；停止生成；Markdown 渲染；图片灯箱 |
+| 对话 | SSE 流式输出；可折叠思考过程（标注修改文件）；输入框右下角模型 / 上下文菜单；工具调用时间线；停止生成；Markdown 渲染；图片灯箱 |
 | 工具 | `list_dir` `read_file` `write_file` `search_files` `run_command` `generate_image` `web_engine`（最多 8 轮可调） |
 | 智能体 | 多个智能体，独立绑定模型、温度、工具白名单、技能与系统提示词 |
 | 智能体团队 | 负责人拆解子任务 → 成员按序执行 → 负责人汇总，聊天中展示分工卡片与成员流式输出 |
@@ -35,6 +35,14 @@ Agent Workbench 的思路是把整套开发闭环搬进桌面：
 | 创作引擎 | 5 套网页模板 + 3 套 Canvas 游戏模板、独立预览服务器、保存热更新、静态诊断、浏览器运行错误回传（见下节） |
 | 外观 | iOS 液态玻璃、深/亮主题、自定义聊天背景、智能体与团队头像 |
 | 历史 | 会话持久化到本地；任务状态徽标（运行中 / 完成 / 中断 / 失败）与工具、文件统计；可回看、删除、导出 Markdown |
+
+## v3.7.0 更新
+
+- **模型与上下文放到输入框**：模型 chip 移到聊天输入框右下角，点击弹出菜单（参考 Qoder）：按接口分组列出全部模型，显示接口状态与检测到的上下文；下方可直接切换上下文长度（自动 / 8K / 32K / 64K / 128K），「自动」优先使用模型元数据，否则 32K。历史消息按上下文预算自动裁剪。
+- **对话右侧栏移除**：会话状态收为标题栏胶囊（运行中 / 已完成 / 已中断 / 失败 + 工具数），悬停查看消息、工具、文件、图片统计；聊天区更宽，更接近 Qoder 布局。
+- **模型 API 自动检测（参考 DSH）**：新建 API 填写 Base URL / Key 后点击「自动检测」，请求 `/models` 自动补全模型、过滤 embedding / 图像等非对话模型、读取 `context_length` 并推荐模型；自动识别 DeepSeek / 通义 / 智谱 / Kimi / OpenAI，鉴权失败明确提示 401/403。
+
+![输入框模型与上下文菜单](screenshots/18-model-menu.png)
 
 ## v3.6.0 更新
 
@@ -114,7 +122,7 @@ Agent Workbench 的思路是把整套开发闭环搬进桌面：
 
 ## 快速开始
 
-从 [Releases](https://github.com/1323107439/agent-workbench/releases/tag/v3.6.0) 下载 `AgentWorkbench-3.6.0-portable.exe`（约 71MB），双击即可运行，无需安装（未签名，SmartScreen 提示时选择"仍要运行"）。
+从 [Releases](https://github.com/1323107439/agent-workbench/releases/tag/v3.7.0) 下载 `AgentWorkbench-3.7.0-portable.exe`（约 71MB），双击即可运行，无需安装（未签名，SmartScreen 提示时选择"仍要运行"）。
 
 1. 标题栏文件夹按钮选择工作区；设置 → 模型 API 添加 OpenAI 兼容端点（OpenAI / DeepSeek / 通义 / 智谱 / Kimi / Ollama 预设，或手填 Base URL / Key / 模型）。
 2. 未填 Key 时自动进入演示模式：流式回复、扫描工作区、演示生图（本地 SVG），可先验证功能。
@@ -126,7 +134,7 @@ Agent Workbench 的思路是把整套开发闭环搬进桌面：
 ```bash
 npm install
 npm start          # 桌面窗口
-npm run smoke      # 无头自检（37 项，含截图）
+npm run smoke      # 无头自检（39 项，含截图）
 npm run build      # 打包 release/AgentWorkbench-<版本>-portable.exe
 ```
 
@@ -147,7 +155,7 @@ public/               液态玻璃界面（原生 HTML/CSS/JS，无构建）
 
 ## 质量验证
 
-- 开发版 `npm run smoke` 与打包版 `AgentWorkbench.exe --smoke`：**37 项全部通过**，覆盖多 API、技能、MCP、插件与市场、DSH 导入、DeepSeek 适配、团队会话、审批闭环、创作引擎（网页 / 游戏模板、预览服务器、热更新、诊断、模型调用闭环）、**真实绘图（尺寸被拒自动回退 / 测试接口）**、**思考流 / 历史任务状态 / 修改文件标注 / 思考开关**、**贪吃蛇在内置浏览器的 Canvas 绘制与键盘转向**、DOM 与玻璃样式、各视图截图。
+- 开发版 `npm run smoke` 与打包版 `AgentWorkbench.exe --smoke`：**39 项全部通过**，覆盖多 API、技能、MCP、插件与市场、DSH 导入、DeepSeek 适配、团队会话、审批闭环、创作引擎（网页 / 游戏模板、预览服务器、热更新、诊断、模型调用闭环）、**真实绘图（尺寸被拒自动回退 / 测试接口）**、**思考流 / 历史任务状态 / 修改文件标注 / 思考开关**、**贪吃蛇在内置浏览器的 Canvas 绘制与键盘转向**、**模型 / 上下文菜单与 8K↔自动切换**、**模型 API 自动检测（/models、过滤、上下文、401）**、DOM 与玻璃样式、各视图截图。
 - 5 套网页模板在真实浏览器逐套实测：控制台无错误、无横向溢出；价格/主题切换、Canvas 图表绘制、任务增删与持久化、文档搜索与代码复制均正常。
 
 ## 界面一览
@@ -158,6 +166,7 @@ public/               液态玻璃界面（原生 HTML/CSS/JS，无构建）
 | ![右侧 Dock](screenshots/06-dock.png) | ![外观与背景](screenshots/09-appearance.png) |
 | ![DSH 插件分类](screenshots/12-market-dsh.png) | ![创作引擎](screenshots/14-engine.png) |
 | ![游戏模板](screenshots/16-engine-games.png) | ![贪吃蛇实机](screenshots/17-game-play.png) |
+| ![模型与上下文菜单](screenshots/18-model-menu.png) | ![思考过程](screenshots/15-thinking.png) |
 
 ## 来源与许可
 
